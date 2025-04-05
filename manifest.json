@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
-	"name": "Extensions Manager",
-	"description": "Simple one-click management for Chrome extensions",
+	"name": "ExtenSwitch",
+	"description": "Quickly enable or disable Chrome extensions with just one click—perfect for managing crypto wallets and other extensions.",
 	"version": "1.0",
 	"icons": {
 		"16": "images/icon-16.png",
@@ -20,7 +20,8 @@
 	},
 	"permissions": [
 		"management",
-		"tabs"
+		"tabs",
+		"storage"
 	],
 	"background": {
 		"service_worker": "background.js"

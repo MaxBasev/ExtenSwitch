@@ -41,6 +41,7 @@ h1 {
   font-size: 18px;
   font-weight: 500;
   color: var(--primary-color);
+  margin: 0;
 }
 
 .search-container {
@@ -276,4 +277,137 @@ input:checked + .slider:before {
 
 .launch-btn:hover {
   background-color: rgba(66, 133, 244, 0.1);
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.header-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+.notification {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(51, 51, 51, 0.9);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  max-width: 90%;
+  text-align: center;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: bottom 0.3s ease-in-out;
+}
+
+.notification.show {
+  bottom: 20px;
+}
+
+.info-container {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-left: 4px solid #4285f4;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  animation: fade-in 0.3s ease-in-out;
+  position: relative;
+  font-size: 14px;
+}
+
+.info-container.closing {
+  animation: fade-out 0.3s ease-in-out;
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.info-icon {
+  color: #4285f4;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.info-header h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #4285f4;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.info-close-btn {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.info-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #555;
+}
+
+.info-content {
+  color: #555;
+}
+
+.info-content p {
+  margin: 8px 0;
+}
+
+.info-content a {
+  color: #4285f4;
+  text-decoration: none;
+}
+
+.info-content a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+.deprecated-label {
+  font-size: 10px;
+  background-color: #f44336;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 3px;
+  margin-left: 6px;
+  font-weight: normal;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1;
 } 
