@@ -33,7 +33,7 @@ Modern extension for easily managing Chrome extensions with just one click. Exte
 ## Installation
 
 ### From Chrome Web Store (Coming Soon)
-1. Visit the [Chrome Web Store page](#) (link coming soon)
+1. Visit the [Chrome Web Store page](https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?utm_source=item-share-cb)
 2. Click "Add to Chrome"
 3. Confirm the installation
 
