@@ -3,11 +3,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	const extensionsList = document.getElementById('extensions-list');
 	const searchInput = document.getElementById('search-input');
 	const filterTabs = document.querySelectorAll('.filter-tab');
+	const aboutBtn = document.getElementById('about-btn');
 
 	// Store all extensions list and current filter values
 	let allExtensions = [];
 	let currentSearchQuery = '';
-	let currentFilter = 'all';
+	let currentFilter = 'enabled';
 
 	// Function to show notification
 	const showNotification = (message) => {
@@ -180,6 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
 				// Check if it's a launchable type
 				(extension.type === 'hosted_app' || extension.type === 'packaged_app' || extension.type === 'legacy_packaged_app' || extension.homepageUrl);
 
+			// Check if we should show store button (has public Chrome Web Store URL)
+			const hasStoreUrl = extension.homepageUrl &&
+				(extension.homepageUrl.includes('chrome.google.com/webstore') ||
+					extension.homepageUrl.includes('chromewebstore.google.com'));
+
 			// Check if it's a deprecated Chrome App
 			const isDeprecatedApp = (extension.type === 'hosted_app' || extension.type === 'packaged_app' || extension.type === 'legacy_packaged_app');
 
@@ -190,10 +196,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ${extension.name}
             ${isDeprecatedApp ? '<span class="deprecated-label">DEPRECATED</span>' : ''}
           </div>
-          <div class="extension-id">${extension.id}</div>
         </div>
         <div class="extension-actions">
-          ${canLaunch ? `<button class="launch-btn" title="Launch extension">▶</button>` : ''}
+          ${hasStoreUrl ? `<button class="launch-btn" title="View in Chrome Web Store">▶</button>` : ''}
           <label class="extension-toggle">
             <input type="checkbox" ${extension.enabled ? 'checked' : ''} data-id="${extension.id}">
             <span class="slider"></span>
@@ -231,49 +236,12 @@ document.addEventListener('DOMContentLoaded', () => {
 				extensionInfo.title = 'Open extension management page';
 			}
 
-			// Add handler for launch button
-			if (canLaunch) {
+			// Add handler for store button
+			if (hasStoreUrl) {
 				const launchBtn = extensionElement.querySelector('.launch-btn');
 				launchBtn.addEventListener('click', () => {
-					// Try to launch extension based on its type
-					try {
-						// Skip known problematic deprecated Chrome Apps
-						const knownDeprecatedApps = ["lbfehkoinhhcknnbdgnnmjhiladcgbol", "mgndgikekgjfcpckkfioiadnlibdjbkf"];
-
-						if (knownDeprecatedApps.includes(extension.id)) {
-							showNotification(`${extension.name} is a deprecated Chrome App and cannot be launched`);
-							return;
-						}
-
-						if (extension.type === 'hosted_app' || extension.type === 'packaged_app' || extension.type === 'legacy_packaged_app') {
-							// Check if this is a deprecated app before trying to launch
-							if (extension.installType === 'normal' && extension.mayDisable) {
-								chrome.management.launchApp(extension.id)
-									.catch(error => {
-										// Handle error for deprecated Chrome Apps
-										console.error('Error launching app:', error);
-										if (error.toString().includes('deprecated')) {
-											// Create notification for user
-											showNotification(extension.name + ' is a deprecated Chrome App and cannot be launched on this platform');
-										}
-									});
-							} else {
-								// This is likely a system app that can't be launched
-								showNotification(`${extension.name} cannot be launched directly`);
-
-								// If it has a homepage, try to open that instead
-								if (extension.homepageUrl) {
-									chrome.tabs.create({ url: extension.homepageUrl });
-								}
-							}
-						} else if (extension.homepageUrl) {
-							chrome.tabs.create({ url: extension.homepageUrl });
-						}
-					} catch (error) {
-						console.error('Error launching extension:', error);
-						// Show user-friendly notification
-						showNotification('Unable to launch ' + extension.name);
-					}
+					// Open the Chrome Web Store page for this extension
+					chrome.tabs.create({ url: extension.homepageUrl });
 				});
 			}
 
@@ -335,4 +303,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Initialize: load extensions when popup opens
 	loadExtensions();
+
+	// Function to show about dialog
+	const showAboutDialog = () => {
+		// Create about dialog if it doesn't exist
+		let aboutDialog = document.querySelector('.about-dialog');
+		if (!aboutDialog) {
+			aboutDialog = document.createElement('div');
+			aboutDialog.className = 'about-dialog';
+
+			aboutDialog.innerHTML = `
+				<div class="dialog-content">
+					<h2 class="dialog-title">About</h2>
+					<p class="about-version">Version 1.1</p>
+					<p class="about-description">
+						Toggle your Chrome extensions with one click. Fast, clean, and ideal for switching between multiple wallets or decluttering your toolbar.
+					</p>
+					<div class="about-links">
+						<a href="https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?utm_source=item-share-cb" target="_blank"><i class="icon-store"></i>Chrome Web Store</a>
+						<a href="https://maxbasev.com" target="_blank"><i class="icon-blog"></i>Blog</a>
+						<a href="https://www.instagram.com/maxbasev" target="_blank"><i class="icon-instagram"></i>Instagram</a>
+						<a href="https://twitter.com/maxbasev" target="_blank"><i class="icon-twitter"></i>Twitter</a>
+						<a href="https://github.com/maxbasev" target="_blank"><i class="icon-github"></i>GitHub</a>
+						<a href="https://www.fiverr.com/maxbasev" target="_blank"><i class="icon-fiverr"></i>Fiverr</a>
+					</div>
+					<p class="copyright">© 2025 MaxBasev</p>
+				</div>
+			`;
+
+			document.querySelector('.container').appendChild(aboutDialog);
+
+			// Add close button handler when clicking outside
+			aboutDialog.addEventListener('click', (e) => {
+				if (e.target === aboutDialog) {
+					aboutDialog.classList.remove('show');
+				}
+			});
+		}
+
+		// Show the dialog
+		aboutDialog.classList.add('show');
+	};
+
+	// Add click handler for about button
+	if (aboutBtn) {
+		aboutBtn.addEventListener('click', showAboutDialog);
+	}
 }); 

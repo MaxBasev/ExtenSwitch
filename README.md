@@ -6,7 +6,7 @@
 
 Modern extension for easily managing Chrome extensions with just one click. ExtenSwitch provides a clean, intuitive interface to control your browser extensions, perfect for managing crypto wallets and other extensions you want to enable only when needed.
 
-[![Available in the Chrome Web Store - Coming Soon](https://img.shields.io/badge/Chrome%20Web%20Store-Coming%20Soon-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/)
+[![Available in the Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Coming%20Soon-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?utm_source=item-share-cb)
 
 ## Features
 
@@ -14,7 +14,6 @@ Modern extension for easily managing Chrome extensions with just one click. Exte
 - **Smart Search**: Find extensions instantly by name
 - **Convenient Filters**: View all, enabled, or disabled extensions
 - **Easy Configuration**: Access extension settings with one click
-- **App Launcher**: Launch apps and extensions directly from the manager
 - **Clear Labeling**: Deprecated extensions are clearly marked
 - **User-Friendly Stats**: See the number of extensions in each category
 - **Elegant Design**: Modern and minimalist interface
@@ -50,9 +49,9 @@ After installation, you will see the ExtenSwitch icon in the Chrome toolbar. Cli
 
 - **Enable/disable extensions**: Use the toggle to the right of each extension
 - **Search for extensions**: Enter the extension name in the search field
-- **Filter extensions**: Use the "All", "Enabled", "Disabled" tabs
+- **Filter extensions**: Use the "Enabled", "Disabled", or "All" tabs to view different sets of extensions
 - **Access extension settings**: Click on the extension name to open its settings
-- **Launch extensions**: Click the play button ▶ to launch a Chrome extension or app
+- **View in Chrome Web Store**: Click the play button ▶ to open the extension's page in Chrome Web Store
 - **Identify deprecated extensions**: Clearly marked with a "DEPRECATED" label
 
 ## Privacy
@@ -63,7 +62,7 @@ ExtenSwitch respects your privacy. The extension operates solely within your bro
 - No analytics
 - No external communication
 
-For more details, please see our [Privacy Policy](https://en.skazoff.com/extenswitch/).
+For more details, please see [About app on my blog](https://en.skazoff.com/extenswitch/).
 
 ## Development
 
@@ -87,8 +86,8 @@ ExtenSwitch is built with pure JavaScript, HTML, and CSS - no frameworks or exte
 
 ## Credits
 
-Developed by [SkazOff](https://en.skazoff.com/)
+Developed by [SkazOff](https://skazoff.com/)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License. 

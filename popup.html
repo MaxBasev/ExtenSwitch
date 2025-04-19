@@ -10,17 +10,20 @@
 <body>
 	<div class="container">
 		<div class="header">
-			<div class="title-container">
-				<img src="images/icon-32.png" alt="ExtenSwitch" class="header-icon">
-				<h1>ExtenSwitch</h1>
+			<div class="header-top">
+				<div class="title-container">
+					<img src="images/icon-32.png" alt="ExtenSwitch" class="header-icon">
+					<h1>ExtenSwitch</h1>
+				</div>
+				<button id="about-btn" class="about-btn" title="About ExtenSwitch">?</button>
 			</div>
 			<div class="search-container">
 				<input type="text" id="search-input" placeholder="Search extensions...">
 			</div>
 			<div class="filter-tabs">
-				<button class="filter-tab active" data-filter="all">All</button>
-				<button class="filter-tab" data-filter="enabled">Enabled</button>
+				<button class="filter-tab active" data-filter="enabled">Enabled</button>
 				<button class="filter-tab" data-filter="disabled">Disabled</button>
+				<button class="filter-tab" data-filter="all">All</button>
 			</div>
 		</div>
 		<div class="extensions-list" id="extensions-list">
