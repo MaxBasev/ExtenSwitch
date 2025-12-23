@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	const searchInput = document.getElementById('search-input');
 	const filterTabs = document.querySelectorAll('.filter-tab');
 	const aboutBtn = document.getElementById('about-btn');
+	const profilesBtn = document.getElementById('profiles-btn');
 
 	// Store all extensions list and current filter values
 	let allExtensions = [];
@@ -307,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Function to show about dialog
 	const showAboutDialog = () => {
 		// Create about dialog if it doesn't exist
-		let aboutDialog = document.querySelector('.about-dialog');
+		let aboutDialog = document.querySelector('.about-dialog:not(.profiles-dialog)');
 		if (!aboutDialog) {
 			aboutDialog = document.createElement('div');
 			aboutDialog.className = 'about-dialog';
@@ -315,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			aboutDialog.innerHTML = `
 				<div class="dialog-content">
 					<h2 class="dialog-title">About</h2>
-					<p class="about-version">Version 1.1</p>
+					<p class="about-version">Version ${chrome.runtime.getManifest().version}</p>
 					<p class="about-description">
 						Toggle your Chrome extensions with one click. Fast, clean, and ideal for switching between multiple wallets or decluttering your toolbar.
 					</p>
@@ -348,5 +349,183 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Add click handler for about button
 	if (aboutBtn) {
 		aboutBtn.addEventListener('click', showAboutDialog);
+	}
+
+	// --- Profiles Logic ---
+
+	// Function to load profiles from storage
+	const getProfiles = (callback) => {
+		chrome.storage.local.get(['ext_profiles'], (result) => {
+			callback(result.ext_profiles || []);
+		});
+	};
+
+	// Function to save profile
+	const saveProfile = (name) => {
+		if (!name || !name.trim()) return;
+
+		// Get all currently enabled extensions
+		const enabledExtensions = allExtensions
+			.filter(ext => ext.enabled)
+			.map(ext => ext.id);
+
+		getProfiles((profiles) => {
+			// Check if name exists
+			const existingIndex = profiles.findIndex(p => p.name.toLowerCase() === name.toLowerCase());
+
+			const newProfile = {
+				name: name.trim(),
+				extensions: enabledExtensions,
+				timestamp: Date.now(),
+				count: enabledExtensions.length
+			};
+
+			let updatedProfiles;
+			if (existingIndex >= 0) {
+				// Update existing
+				updatedProfiles = [...profiles];
+				updatedProfiles[existingIndex] = newProfile;
+			} else {
+				// Add new
+				updatedProfiles = [...profiles, newProfile];
+			}
+
+			// Save to storage
+			chrome.storage.local.set({ ext_profiles: updatedProfiles }, () => {
+				showNotification(`Profile "${newProfile.name}" saved!`);
+				renderProfilesList();
+				// Clear input
+				const input = document.getElementById('new-profile-name');
+				if (input) input.value = '';
+			});
+		});
+	};
+
+	// Function to delete profile
+	const deleteProfile = (name) => {
+		getProfiles((profiles) => {
+			const updatedProfiles = profiles.filter(p => p.name !== name);
+			chrome.storage.local.set({ ext_profiles: updatedProfiles }, () => {
+				renderProfilesList();
+			});
+		});
+	};
+
+	// Function to apply profile
+	const applyProfile = (profile) => {
+		const targetIds = new Set(profile.extensions);
+		let changedCount = 0;
+
+		allExtensions.forEach(ext => {
+			const shouldBeEnabled = targetIds.has(ext.id);
+
+			if (ext.enabled !== shouldBeEnabled) {
+				// Only change if different
+				chrome.management.setEnabled(ext.id, shouldBeEnabled);
+				changedCount++;
+			}
+		});
+
+		showNotification(`Profile "${profile.name}" applied!`);
+
+		// Close dialog
+		const dialog = document.querySelector('.profiles-dialog');
+		if (dialog) dialog.classList.remove('show');
+	};
+
+	// Function to render profiles list in dialog
+	const renderProfilesList = () => {
+		const listContainer = document.querySelector('.profiles-list');
+		if (!listContainer) return;
+
+		getProfiles((profiles) => {
+			listContainer.innerHTML = '';
+
+			if (profiles.length === 0) {
+				listContainer.innerHTML = '<div class="empty-profiles">No profiles saved yet. <br>Create one to save current state.</div>';
+				return;
+			}
+
+			// Sort by newest first
+			profiles.sort((a, b) => b.timestamp - a.timestamp).forEach(profile => {
+				const item = document.createElement('div');
+				item.className = 'profile-item';
+				item.innerHTML = `
+					<div class="profile-name" title="${profile.name}">${profile.name} (${profile.count} est.)</div>
+					<div class="profile-actions">
+						<button class="profile-btn btn-apply" title="Apply this profile">Apply</button>
+						<button class="profile-btn btn-delete" title="Delete profile">✕</button>
+					</div>
+				`;
+
+				// Handlers
+				item.querySelector('.btn-apply').addEventListener('click', () => applyProfile(profile));
+				item.querySelector('.btn-delete').addEventListener('click', () => {
+					if (confirm(`Delete profile "${profile.name}"?`)) {
+						deleteProfile(profile.name);
+					}
+				});
+
+				listContainer.appendChild(item);
+			});
+		});
+	};
+
+	// Function to show profiles dialog
+	const showProfilesDialog = () => {
+		let profilesDialog = document.querySelector('.profiles-dialog');
+
+		if (!profilesDialog) {
+			profilesDialog = document.createElement('div');
+			profilesDialog.className = 'about-dialog profiles-dialog'; // Reuse about-dialog styles for modal
+
+			profilesDialog.innerHTML = `
+				<div class="dialog-content">
+					<h2 class="dialog-title">Profiles</h2>
+					<p class="about-version">Save current state as a snapshot</p>
+
+					<div class="profiles-list">
+						<!-- Profiles will be injected here -->
+					</div>
+
+					<div class="create-profile-form">
+						<input type="text" id="new-profile-name" class="create-profile-input" placeholder="Profile name (e.g. Work)">
+						<button id="create-profile-btn" class="btn-create">Save</button>
+					</div>
+				</div>
+			`;
+
+			document.querySelector('.container').appendChild(profilesDialog);
+
+			// Close on backdrop click
+			profilesDialog.addEventListener('click', (e) => {
+				if (e.target === profilesDialog) {
+					profilesDialog.classList.remove('show');
+				}
+			});
+
+			// Create handler
+			const createBtn = profilesDialog.querySelector('#create-profile-btn');
+			const input = profilesDialog.querySelector('#new-profile-name');
+
+			const handleCreate = () => {
+				const name = input.value;
+				if (name) saveProfile(name);
+			};
+
+			createBtn.addEventListener('click', handleCreate);
+			input.addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') handleCreate();
+			});
+		}
+
+		// Update list and show
+		renderProfilesList();
+		profilesDialog.classList.add('show');
+	};
+
+	// Add click handler for profiles button
+	if (profilesBtn) {
+		profilesBtn.addEventListener('click', showProfilesDialog);
 	}
 }); 
