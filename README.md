@@ -64,7 +64,7 @@ ExtenSwitch respects your privacy. The extension operates solely within your bro
 - No analytics
 - No external communication
 
-For more details, please see [About app on my blog](https://en.skazoff.com/extenswitch/).
+For more details, please see [About app on my blog](https://blog.maxbasev.com/webdev/the-journey-of-creating-extenswitch/).
 
 ## Development
 
