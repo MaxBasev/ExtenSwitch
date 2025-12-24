@@ -6,10 +6,11 @@
 
 Modern extension for easily managing Chrome extensions with just one click. ExtenSwitch provides a clean, intuitive interface to control your browser extensions, perfect for managing crypto wallets and other extensions you want to enable only when needed.
 
-[![Available in the Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Coming%20Soon-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?utm_source=item-share-cb)
+[![Available in the Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Available-blue?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?authuser=1&hl=en)
 
 ## Features
 
+- **Smart Profiles**: Save snapshots of your current setup (New!)
 - **Quick Toggle**: Enable/disable any Chrome extension with a single click
 - **Smart Search**: Find extensions instantly by name
 - **Convenient Filters**: View all, enabled, or disabled extensions
@@ -31,8 +32,8 @@ Modern extension for easily managing Chrome extensions with just one click. Exte
 
 ## Installation
 
-### From Chrome Web Store (Coming Soon)
-1. Visit the [Chrome Web Store page](https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?utm_source=item-share-cb)
+### From Chrome Web Store
+1. Visit the [Chrome Web Store page](https://chromewebstore.google.com/detail/pkgomffofapfpgmebfcdjnchjleflpcn?authuser=1&hl=en)
 2. Click "Add to Chrome"
 3. Confirm the installation
 
@@ -47,6 +48,7 @@ Modern extension for easily managing Chrome extensions with just one click. Exte
 
 After installation, you will see the ExtenSwitch icon in the Chrome toolbar. Click on it to open the extension manager.
 
+- **Use Profiles**: Click the Bookmark icon to save or restore extension snapshots (e.g. "Work", "Crypto", "All Off")
 - **Enable/disable extensions**: Use the toggle to the right of each extension
 - **Search for extensions**: Enter the extension name in the search field
 - **Filter extensions**: Use the "Enabled", "Disabled", or "All" tabs to view different sets of extensions
@@ -79,7 +81,6 @@ ExtenSwitch is built with pure JavaScript, HTML, and CSS - no frameworks or exte
 ## Future Plans
 
 - Dark theme toggle for better night-time usage
-- Extension grouping functionality for better organization
 - Export/import extension configuration
 - Hotkeys for quick access to common functions
 - Localization for multiple languages
